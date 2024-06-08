@@ -26,6 +26,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> create(@RequestBody UserDto user){
 
+        System.out.println("hello");
         String encode = passwordEncoder.encode(user.getPassword());
         user.setPassword(encode);
         UserDto userDto = userServices.create(user);

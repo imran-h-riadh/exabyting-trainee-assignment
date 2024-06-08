@@ -25,14 +25,10 @@ import java.util.List;
 public class JwtTokenValidator extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
         String jwt = request.getHeader("Authorization");
 
-        if(jwt != null){
-
-
+        if (jwt != null && jwt.startsWith("Bearer ")) {
             try {
-
                 jwt = jwt.substring(7);
 
                 SecretKey secretKey = Keys.hmacShaKeyFor(JwtConstent.SECRET_KEY.getBytes(StandardCharsets.UTF_8));
@@ -40,17 +36,19 @@ public class JwtTokenValidator extends OncePerRequestFilter {
                 String username = String.valueOf(claims.get("email"));
                 String authorities = String.valueOf(claims.get("authorities"));
                 List<GrantedAuthority> auths = AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
-                Authentication authentication = new UsernamePasswordAuthenticationToken(username,null,auths);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, auths);
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-
-            }catch (Exception e){
-                throw  new BadCredentialsException("Invalid Token Recieve");
+            } catch (Exception e) {
+                SecurityContextHolder.clearContext(); // Clear any existing authentication
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Token Received"); // Send 401 Unauthorized
+                return;
             }
-
-            filterChain.doFilter(request,response);
-
         }
 
+        filterChain.doFilter(request, response);
+
     }
+
+
 }

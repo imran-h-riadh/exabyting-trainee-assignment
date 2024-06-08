@@ -21,12 +21,12 @@ public class AppConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        String base_url = "/api/v1";
-
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authreq->
-                        authreq.requestMatchers(base_url+"/auth").permitAll().anyRequest()
+                        authreq.requestMatchers("api/v1/auth").permitAll()
+                                .requestMatchers("api/v1/users/signup").permitAll()
+                                .anyRequest()
                                 .authenticated())
                 .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class);
 
