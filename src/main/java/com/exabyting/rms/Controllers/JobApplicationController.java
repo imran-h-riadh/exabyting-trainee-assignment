@@ -1,0 +1,56 @@
+package com.exabyting.rms.Controllers;
+
+import com.exabyting.rms.DTOs.JobApplicationDto;
+import com.exabyting.rms.Exception.ResourceNotFound;
+import com.exabyting.rms.Services.ApplicationServices;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/v1/applications")
+public class JobApplicationController {
+
+
+    @Autowired
+    private ApplicationServices applicationServices;
+    @PostMapping("/")
+    public ResponseEntity<?> create(@RequestBody JobApplicationDto jobApplicationDto) throws ResourceNotFound {
+
+        return new ResponseEntity<>(applicationServices.create(jobApplicationDto), HttpStatus.CREATED);
+    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("jobs/{jobId}")
+    public ResponseEntity<?> byJobOpening(
+            @PathVariable Integer jobId,
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir){
+
+        return new ResponseEntity<>(applicationServices.byJob(pageNumber,pageSize,sortBy,sortDir,jobId),HttpStatus.OK);
+    }
+
+    @GetMapping("users/{userId}")
+    public ResponseEntity<?> byUser(
+            @PathVariable Integer userId,
+            @PathVariable Integer jobId,
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir){
+
+        return  new ResponseEntity<>(applicationServices.byUser(pageNumber,pageSize,sortBy,sortDir,userId),HttpStatus.OK);
+    }
+
+    @PutMapping("{applicationId}/updateStatus/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable Integer applicationId,@PathVariable String status){
+        return null;
+    }
+
+
+}

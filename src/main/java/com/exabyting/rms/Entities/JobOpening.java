@@ -15,16 +15,20 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-public class JobOpening extends BaseEntity{
+public class JobOpening extends BaseEntity {
 
-    @Column(nullable = false,length = 1000)
+    @Column(nullable = false, length = 500)
+    private String jobTitle;
+    @Column(nullable = false, length = 1000)
     private String jobDescription;
+    @Column(nullable = false, length = 1000)
+    private String requirements;
     private Integer NoOfVacancy;
     @Column(nullable = false)
     private LocalDateTime deadLine;
     @Column(nullable = false)
     private JobOpeningStatus status;
     @OneToMany(mappedBy = "jobOpening")
-    private List<JobApplication>applications;
+    private List<JobApplication> applications;
 
 }

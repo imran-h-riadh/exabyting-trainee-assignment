@@ -1,5 +1,8 @@
 package com.exabyting.rms.Entities.Helper;
 
 public enum Role {
-    APPLICANT,HR,ADMIN,INTERVIEWER
+    APPLICANT,
+    HR,
+    ADMIN,
+    INTERVIEWER
 }
