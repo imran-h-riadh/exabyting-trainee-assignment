@@ -7,6 +7,7 @@ import com.exabyting.rms.Services.JobOpeningServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,8 +19,10 @@ public class JobOpeningControllers {
     private JobOpeningServices jobOpeningServices;
 
 
+    @PreAuthorize("hasAnyAuthority('HR', 'ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody JobOpeningDto jobOpening){
+        System.out.println(jobOpening);
         return new ResponseEntity<>(jobOpeningServices.crate(jobOpening), HttpStatus.CREATED);
     }
 
@@ -51,12 +54,16 @@ public class JobOpeningControllers {
         return new ResponseEntity<>(jobOpeningServices.alljobByStatus(pageNumber,pageSize,sortBy,sortDir,jobOpeningStatus),HttpStatus.OK);
     }
 
-    @PutMapping("/")
+
+    @PreAuthorize("hasAnyAuthority('HR', 'ADMIN')")
+    @PutMapping("/{id}")
     public ResponseEntity<?> update(@RequestBody JobOpeningDto jobOpeningDto,
                                     @PathVariable Integer id) throws ResourceNotFound {
         return new ResponseEntity<>(jobOpeningServices.update(id,jobOpeningDto),HttpStatus.OK);
     }
-    
+
+    @PreAuthorize("hasAnyAuthority('HR', 'ADMIN')")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) throws ResourceNotFound {
         jobOpeningServices.delete(id);
         return  new ResponseEntity<>("deleted successfully",HttpStatus.OK);

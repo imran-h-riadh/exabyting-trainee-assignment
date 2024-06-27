@@ -8,6 +8,8 @@ import com.exabyting.rms.Utils.PageableResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,13 +28,18 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<?> create(@RequestBody UserDto user){
 
-        System.out.println("hello");
-        String encode = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encode);
-        UserDto userDto = userServices.create(user);
-        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
+        try {
+            String encodedPassword = passwordEncoder.encode(user.getPassword());
+            user.setPassword(encodedPassword);
+            UserDto createdUser = userServices.create(user);
+            return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("User creation failed: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
+
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/")
     public ResponseEntity<?> allusers(
             @RequestParam(defaultValue = "0") Integer pageNumber,
@@ -52,6 +59,7 @@ public class UserController {
         return new ResponseEntity<>(userServices.byId(id),HttpStatus.OK);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/roles/{roleName}")
     public ResponseEntity<?> byRole(
             @PathVariable String roleName,
@@ -69,6 +77,7 @@ public class UserController {
 
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id) throws ResourceNotFound {
 
@@ -78,3 +87,4 @@ public class UserController {
 
 
 }
+                         

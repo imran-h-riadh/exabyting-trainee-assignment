@@ -1,6 +1,7 @@
 package com.exabyting.rms.Controllers;
 
 import com.exabyting.rms.DTOs.JobApplicationDto;
+import com.exabyting.rms.Entities.Helper.JobApplicationStatus;
 import com.exabyting.rms.Exception.ResourceNotFound;
 import com.exabyting.rms.Services.ApplicationServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ public class JobApplicationController {
 
     @Autowired
     private ApplicationServices applicationServices;
+
+    @PreAuthorize("hasAuthority('APPLICANT')")
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody JobApplicationDto jobApplicationDto) throws ResourceNotFound {
 
@@ -23,7 +26,7 @@ public class JobApplicationController {
     }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("jobs/{jobId}")
     public ResponseEntity<?> byJobOpening(
             @PathVariable Integer jobId,
@@ -35,10 +38,9 @@ public class JobApplicationController {
         return new ResponseEntity<>(applicationServices.byJob(pageNumber,pageSize,sortBy,sortDir,jobId),HttpStatus.OK);
     }
 
-    @GetMapping("users/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<?> byUser(
             @PathVariable Integer userId,
-            @PathVariable Integer jobId,
             @RequestParam(defaultValue = "0") Integer pageNumber,
             @RequestParam(defaultValue = "10") Integer pageSize,
             @RequestParam(defaultValue = "id") String sortBy,
@@ -47,9 +49,12 @@ public class JobApplicationController {
         return  new ResponseEntity<>(applicationServices.byUser(pageNumber,pageSize,sortBy,sortDir,userId),HttpStatus.OK);
     }
 
-    @PutMapping("{applicationId}/updateStatus/{status}")
-    public ResponseEntity<?> updateStatus(@PathVariable Integer applicationId,@PathVariable String status){
-        return null;
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/{applicationId}/updateStatus/{status}")
+    public ResponseEntity<?> updateStatus(@PathVariable Integer applicationId,@PathVariable String status) throws ResourceNotFound {
+
+        return new ResponseEntity<>(applicationServices.update(applicationId,
+                JobApplicationStatus.valueOf(status)),HttpStatus.OK);
     }
 
 

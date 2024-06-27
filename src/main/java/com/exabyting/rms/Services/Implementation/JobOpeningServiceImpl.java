@@ -25,7 +25,9 @@ public class JobOpeningServiceImpl implements JobOpeningServices {
 
     @Override
     public JobOpeningDto crate(JobOpeningDto jobOpeningDto) {
+        System.out.println(jobOpeningDto.getNoOfVacancy());
         JobOpening jobOpening = ModelMapping.jobOpeningDtoToJobOpening(jobOpeningDto);
+        System.out.println(jobOpening.getNoOfVacancy());
         JobOpening save = jobOpeningRepository.save(jobOpening);
         return ModelMapping.jobOpeningToJobOpeningDto(save);
 

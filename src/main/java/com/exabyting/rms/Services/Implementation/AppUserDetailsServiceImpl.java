@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppUserDetailsServiceImpl implements UserDetailsService {
@@ -29,15 +30,13 @@ public class AppUserDetailsServiceImpl implements UserDetailsService {
 
         }
         List<Role> roles = user.getRoles();
-        List<GrantedAuthority> authorityList = new ArrayList<>();
-
-        for(Role role:roles){
-            authorityList.add(new SimpleGrantedAuthority(role.toString()));
-        }
+        List<GrantedAuthority> authorities = roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.toString()))
+                .collect(Collectors.toList());
 
 
         return  new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),
-                authorityList);
+                authorities);
 
     }
 }

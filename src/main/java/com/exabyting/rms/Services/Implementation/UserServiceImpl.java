@@ -37,6 +37,7 @@ public class UserServiceImpl implements UserServices {
 
         User user = ModelMapping.userDtoToUser(userDto);
         User save = userRepository.save(user);
+        save.setPassword(null);
         return ModelMapping.userToUserDto(save);
 
     }

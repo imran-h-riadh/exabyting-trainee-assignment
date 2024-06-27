@@ -1,6 +1,8 @@
 package com.exabyting.rms.DTOs;
 
 import com.exabyting.rms.Entities.Helper.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ public class UserDto {
 
     private String email;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     private List<Role> roles=new ArrayList<>();

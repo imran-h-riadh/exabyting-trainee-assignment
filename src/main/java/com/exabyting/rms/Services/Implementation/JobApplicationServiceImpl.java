@@ -35,6 +35,7 @@ public class JobApplicationServiceImpl implements ApplicationServices {
     @Override
     public JobApplicationDto create(JobApplicationDto jobApplicationDto) throws ResourceNotFound {
 
+        System.out.println(jobApplicationDto.getJobOpeningId());
         User user = userRepository.findById(jobApplicationDto.getUserId()).orElseThrow(
                 () -> new ResourceNotFound("userNotFound with id " + jobApplicationDto.getUserId())
         );
@@ -53,8 +54,9 @@ public class JobApplicationServiceImpl implements ApplicationServices {
 
 
         return JobApplicationDto.builder()
-                .jobOpeningId(jobApplicationDto.getId())
-                .userId(user.getId())
+                .id(save.getId())
+                .jobOpeningId(jobApplicationDto.getJobOpeningId())
+                .userId(jobApplicationDto.getUserId())
                 .resumeLink(save.getResumeLink())
                 .status(save.getStatus())
                 .build();
@@ -67,6 +69,7 @@ public class JobApplicationServiceImpl implements ApplicationServices {
         application.setStatus(status);
         JobApplication save = applicationRepository.save(application);
         return JobApplicationDto.builder()
+                .id(save.getId())
                 .jobOpeningId(save.getJobOpening().getId())
                 .userId(save.getUser().getId())
                 .resumeLink(save.getResumeLink())
@@ -83,7 +86,8 @@ public class JobApplicationServiceImpl implements ApplicationServices {
         Page<JobApplication> byJobOpeningId = applicationRepository.findByJobOpeningId(jobId, pageable);
         List<JobApplicationDto> list = byJobOpeningId.stream().map(e -> JobApplicationDto.builder()
                 .jobOpeningId(e.getId())
-                .userId(e.getId())
+                .id(e.getId())
+                .userId(e.getUser().getId())
                 .resumeLink(e.getResumeLink())
                 .status(e.getStatus())
                 .build()).toList();
@@ -98,7 +102,8 @@ public class JobApplicationServiceImpl implements ApplicationServices {
         Page<JobApplication> byJobOpeningId = applicationRepository.findByUserId(userId, pageable);
         List<JobApplicationDto> list = byJobOpeningId.stream().map(e -> JobApplicationDto.builder()
                 .jobOpeningId(e.getId())
-                .userId(e.getId())
+                .id(e.getId())
+                .userId(e.getUser().getId())
                 .resumeLink(e.getResumeLink())
                 .status(e.getStatus())
                 .build()).toList();

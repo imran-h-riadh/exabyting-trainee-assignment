@@ -16,10 +16,9 @@ import org.hibernate.annotations.CascadeType;
 @Getter
 public class Profile extends BaseEntity{
 
-    @Column(nullable = false)
+
     private String firstName;
     private String lastName;
-    @Column(nullable = false)
     private String contactNumber;
     private Address address;
 

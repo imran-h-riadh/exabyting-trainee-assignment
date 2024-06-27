@@ -18,13 +18,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/auth")
 public class AuthController {
 
     @Autowired
@@ -72,6 +69,7 @@ public class AuthController {
         String name = authenticationuser.getName();
         User loggedUser = userRepository.findByEmail(name);
         UserDto userDto = ModelMapping.userToUserDto(loggedUser);
+        userDto.setPassword(null);
         LoginResponse loginResponse = new LoginResponse();
         loginResponse.setJwtToken(jwtToken);
         loginResponse.setUserDto(userDto);
