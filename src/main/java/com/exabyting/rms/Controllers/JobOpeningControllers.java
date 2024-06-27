@@ -22,7 +22,7 @@ public class JobOpeningControllers {
     @PreAuthorize("hasAnyAuthority('HR', 'ADMIN')")
     @PostMapping("/")
     public ResponseEntity<?> create(@RequestBody JobOpeningDto jobOpening){
-        System.out.println(jobOpening);
+
         return new ResponseEntity<>(jobOpeningServices.crate(jobOpening), HttpStatus.CREATED);
     }
 

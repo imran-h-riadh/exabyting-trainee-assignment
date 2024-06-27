@@ -35,7 +35,7 @@ public class JobApplicationServiceImpl implements ApplicationServices {
     @Override
     public JobApplicationDto create(JobApplicationDto jobApplicationDto) throws ResourceNotFound {
 
-        System.out.println(jobApplicationDto.getJobOpeningId());
+
         User user = userRepository.findById(jobApplicationDto.getUserId()).orElseThrow(
                 () -> new ResourceNotFound("userNotFound with id " + jobApplicationDto.getUserId())
         );

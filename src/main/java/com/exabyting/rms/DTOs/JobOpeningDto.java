@@ -17,7 +17,7 @@ public class JobOpeningDto {
 
     private String requirements;
 
-    private Integer NoOfVacancy;
+    private Integer noOfVacancy;
 
     private LocalDateTime deadLine;
 
