@@ -1,5 +1,4 @@
 
-import HomeIcon from '../../assets/icons/home.svg';
 
 import Logout from '../auth/Logout';
 
@@ -16,8 +15,8 @@ const Header = () => {
 
       <div className="flex items-center justify-between space-x-4">
         <Link to="/" className="btn-primary">
-          <img src={HomeIcon} alt="Home" />
           Home
+          
         </Link>
         
 

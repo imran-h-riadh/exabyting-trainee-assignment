@@ -1,4 +1,4 @@
-import LogoutIcon from "../../assets/icons/logout.svg";
+
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
@@ -12,7 +12,7 @@ const Logout = () => {
 
   return (
     <button className="icon-btn" onClick={handleLogout}>
-        <img src={LogoutIcon} alt="Logout" />
+        Logout
     </button>
   )
 }
