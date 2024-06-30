@@ -1,11 +1,12 @@
+/* eslint-disable no-empty */
 import { useEffect, useState } from "react";
-import useAxios from "./../../hooks/useAxios";
-import { useAuth } from "../../hooks/useAuth";
+import HttpReg from "../../httpReq/HttpReg";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth";
 
 export default function AllJobs() {
   const { auth } = useAuth();
-  const { api } = useAxios();
+  const { get, remove } = HttpReg();
 
   const [allJobInfo, setAllJobInfo] = useState([]);
   const [jobStatus, setJobStatus] = useState("ALL");
@@ -14,15 +15,11 @@ export default function AllJobs() {
     fetchData();
   }, []);
   const fetchData = async () => {
-    try {
-      const response = await api.get(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/jobs/`
-      );
-      if (response.status === 200) {
-        setAllJobInfo(response.data.content);
-      }
-    } catch (error) {
-      console.log(error);
+    const response = await get(`/jobs/`);
+    console.log(response);
+
+    if (response.status === 200) {
+      setAllJobInfo(response.data.content);
     }
   };
   function isAuth(role) {
@@ -33,31 +30,21 @@ export default function AllJobs() {
       setJobStatus(newStatus);
       fetchData();
     } else {
-      try {
-        const response = await api.get(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/jobs/status/${newStatus}`
-        );
-        if (response.status === 200) {
-          setAllJobInfo(response.data.content);
-          setJobStatus(newStatus);
-        }
-      } catch (error) {
-        console.log(error);
+      const response = await get(`/jobs/status/${newStatus}`);
+      console.log(response);
+
+      if (response.status === 200) {
+        setAllJobInfo(response.data.content);
+        setJobStatus(newStatus);
       }
     }
   }
   async function handleJobdelete(id) {
-    try {
-      const response = await api.delete(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/jobs/${id}`
-      );
-      if (response.status === 200) {
-        setAllJobInfo((allJobInfo) =>
-          allJobInfo.filter((job) => job.id !== id)
-        );
-      }
-    } catch (error) {
-      console.log(error);
+    const response = await remove(
+      `${import.meta.env.VITE_SERVER_BASE_URL}/jobs/${id}`
+    );
+    if (response.status === 200) {
+      setAllJobInfo((allJobInfo) => allJobInfo.filter((job) => job.id !== id));
     }
   }
 
@@ -83,7 +70,9 @@ export default function AllJobs() {
             {(isAuth("ADMIN") || isAuth("HR")) && (
               <th className="py-3 px-6 text-left">Actions</th>
             )}
-            <th className=" py-3 px-6 text-left">All Applicant</th>
+            {(isAuth("ADMIN") || isAuth("HR")) && (
+              <th className=" py-3 px-6 text-left">All Applicant</th>
+            )}
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
@@ -92,7 +81,12 @@ export default function AllJobs() {
               key={jobInfo.id}
               className="border-b border-gray-200 hover:bg-gray-100"
             >
-              <td className="py-3 px-6 text-left"> <Link to={`/JobDetails/${jobInfo.id}`}>{jobInfo.jobTitle}</Link> </td>
+              <td className="py-3 px-6 text-left">
+                {" "}
+                <Link to={`/JobDetails/${jobInfo.id}`}>
+                  {jobInfo.jobTitle}
+                </Link>{" "}
+              </td>
               <td className="py-3 px-6 text-left">
                 {jobInfo.noOfVacancy ?? 0}
               </td>
@@ -107,10 +101,15 @@ export default function AllJobs() {
                     Delete
                   </button>
                 </td>
-                
               )}
-              <td className="py-3 px-6 text-left"> <Link to={`/allApplicant/${jobInfo.id}`}>see all applicant</Link> </td>
-
+              {(isAuth("ADMIN") || isAuth("HR")) && (
+                <td className="py-3 px-6 text-left">
+                  {" "}
+                  <Link to={`/allApplicant/${jobInfo.id}`}>
+                    see all applicant
+                  </Link>{" "}
+                </td>
+              )}
             </tr>
           ))}
         </tbody>

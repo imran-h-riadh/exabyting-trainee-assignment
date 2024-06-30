@@ -14,14 +14,15 @@ const HomePage = () => {
   return (
     <div>
       {(isAuth("ADMIN") || isAuth("HR")) && (
-        <div className=" my-24 mx-40 " ><Link
-        className="text-white transition-all hover:text-lwsGreen hover:underline mx-2 bg-slate-500 text-3xl "
-        to="/createJob"
-      >
-        Create New Job Post
-      </Link></div>
-      )}
-
+  <div className="flex justify-center items-center my-24 mx-40">
+    <Link
+      className="text-white bg-blue-600 hover:bg-blue-700 text-3xl font-bold py-4 px-8 rounded-lg shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
+      to="/createJob"
+    >
+      Create New Job Post
+    </Link>
+  </div>
+)}
       <AllJobs />
     </div>
   );

@@ -1,34 +1,29 @@
+/* eslint-disable no-empty */
 import { useEffect, useState } from "react";
-import useAxios from "../../hooks/useAxios";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import HttpReg from "../../httpReq/HttpReg";
 
 const CreateJobPost = () => {
+  const { get, post, put } = HttpReg();
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
-  const { api } = useAxios();
 
   const initialVal = {
     jobTitle: "",
     jobDescription: "",
     requirements: "",
-    NoOfVacancy: null,
+    noOfVacancy: null,
     deadLine: "",
     status: "OPEN",
   };
   const [formData, setFormData] = useState(initialVal);
   const fetchData = async () => {
-    try {
-      const response = await api.get(
-        `${import.meta.env.VITE_SERVER_BASE_URL}/jobs/${id}`
-      );
-      if (response.status === 200) {
-        setFormData(response.data);
-      }
-    } catch (error) {
-      console.log(error);
+    const response = await get(`/jobs/${id}`);
+    if (response.status === 200) {
+      setFormData(response.data);
     }
   };
   useEffect(() => {
@@ -39,10 +34,9 @@ const CreateJobPost = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     let newValue = value;
-    if (name === "NoOfVacancy") {
+    if (name === "noOfVacancy") {
       newValue = Number(value);
     }
-    console.log("name==", name, "     val == ", newValue);
     setFormData({
       ...formData,
       [name]: newValue,
@@ -51,36 +45,19 @@ const CreateJobPost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(formData);
-    console.log("Form data submitted:", formData);
 
     if (id) {
-      try {
-        const response = await api.put(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/jobs/${id}`,
-          formData
-        );
-        if (response.status === 200) {
-          navigate("/");
-        }
-      } catch (error) {
-        console.log(error);
+      const response = await put(`/jobs/${id}`, formData);
+      if (response.status === 200) {
+        navigate("/");
       }
-      setFormData(initialVal);
-      
-    }
-     else {
 
-      try {
-        const response = await api.post(
-          `${import.meta.env.VITE_SERVER_BASE_URL}/jobs/`,
-          formData
-        );
-        if (response.status === 201) {
-          navigate("/");
-        }
-      } catch (error) {
-        console.log(error);
+      setFormData(initialVal);
+    } else {
+      const response = await post(`/jobs/`, formData);
+
+      if (response.status === 201) {
+        navigate("/");
       }
       setFormData(initialVal);
     }
@@ -131,14 +108,14 @@ const CreateJobPost = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="NoOfVacancy" className="block  mb-2">
+          <label htmlFor="noOfVacancy" className="block  mb-2">
             Number of Vacancies
           </label>
           <input
             type="number"
-            id="NoOfVacancy"
-            name="NoOfVacancy"
-            value={formData.NoOfVacancy?? 0}
+            id="noOfVacancy"
+            name="noOfVacancy"
+            value={formData.noOfVacancy ?? 0}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-lg text-black"
             required

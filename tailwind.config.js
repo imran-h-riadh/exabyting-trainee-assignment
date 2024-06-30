@@ -18,6 +18,8 @@ export default {
         deepDark: "#17181C",
         mediumDark: "#1E1F24",
         lighterDark: "#27292F",
+        customBorder: '#3F3F3F',
+        customBg: '#1E1F24',
       },
     },
   },

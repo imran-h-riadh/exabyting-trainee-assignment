@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+/* eslint-disable no-empty */
+
+
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '../../hooks/useAxios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-
-
 import Modal from './Modal';
+import HttpReg from '../../httpReq/HttpReg';
 
 export default function JobDetails() {
   
+  const { get } = HttpReg();
 
   const { api } = useAxios();
   const { id } = useParams();
@@ -19,14 +22,11 @@ export default function JobDetails() {
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    try {
-      const response = await api.get(`${import.meta.env.VITE_SERVER_BASE_URL}/jobs/${id}`);
+    
+      const response = await get(`/jobs/${id}`);
       if (response.status === 200) {
         setDetailInfo(response.data);
       }
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const navigateToUser = (id) => {
@@ -50,7 +50,7 @@ export default function JobDetails() {
       navigate("/");
     }
   } catch (error) {
-    console.log(error);
+    
   }
 
 }

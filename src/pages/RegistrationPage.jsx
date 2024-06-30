@@ -29,7 +29,7 @@ const RegistrationPage = () => {
         },
       },
     };
-    console.log(formData);
+    
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/users/signup`,
@@ -37,11 +37,10 @@ const RegistrationPage = () => {
       );
 
       if (response.status === 201) {
-        console.log("xxxxxxxx");
+        
         navigate("/login");
       }
     } catch (error) {
-      console.error(error);
       setError("root.random", {
         type: "random",
         message: `Registration failed`,
@@ -51,7 +50,7 @@ const RegistrationPage = () => {
 
   return (
     <form
-      className="border-b border-[#3F3F3F] pb-10 lg:pb-[60px] mx-96"
+      className="border-b border-customBorder pb-10 lg:pb-[60px] mx-96"
       onSubmit={handleSubmit(submitForm)}
     >
       <Field label="name" error={errors.name}>
