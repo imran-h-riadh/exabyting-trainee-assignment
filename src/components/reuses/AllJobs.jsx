@@ -16,7 +16,6 @@ export default function AllJobs() {
   }, []);
   const fetchData = async () => {
     const response = await get(`/jobs/`);
-    console.log(response);
 
     if (response.status === 200) {
       setAllJobInfo(response.data.content);
@@ -41,7 +40,7 @@ export default function AllJobs() {
   }
   async function handleJobdelete(id) {
     const response = await remove(
-      `${import.meta.env.VITE_SERVER_BASE_URL}/jobs/${id}`
+      `/jobs/${id}`
     );
     if (response.status === 200) {
       setAllJobInfo((allJobInfo) => allJobInfo.filter((job) => job.id !== id));

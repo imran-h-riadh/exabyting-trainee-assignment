@@ -8,7 +8,6 @@ export default function HttpReg() {
   const get = async (url) => {
     
     try {
-        console.log("skjgdg");
       const response = await api.get(url);
       return response;
     } catch (error) {

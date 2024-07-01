@@ -1,8 +1,10 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export default function ProfilePage() {
   const { auth } = useAuth();
   const { name, email, roles } = auth.userDto;
+  console.log(auth);
   return (
     <div className="max-w-sm mx-auto  shadow-md rounded-lg overflow-hidden">
       <div className="p-4">
@@ -24,6 +26,8 @@ export default function ProfilePage() {
           </ul>
         </div> 
       </div>
+      
+      <Link to={`/updateInfo?id=${auth.userDto.id}`} > update your Information</Link>
     </div>
   )
 }

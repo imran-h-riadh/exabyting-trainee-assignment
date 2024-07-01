@@ -8,6 +8,8 @@ import PrivateRoutes from './routes/PrivateRoutes';
 import CreateJobPost from './components/reuses/CreateJobPost';
 import JobDetails from './components/reuses/JobDetails';
 import AllAplicat from './components/reuses/AllAplicat';
+import AdminPanel from './pages/AdminPanel';
+import UpdateInfo from './pages/UpdateInfo';
 export default function AllRouth() {
     return (
         <>
@@ -18,6 +20,10 @@ export default function AllRouth() {
               <Route element={<CreateJobPost />} path="/createJob" />
               <Route element={<AllAplicat />} path="/allApplicant/:id" />
               <Route element={<JobDetails />} path="/jobDetails/:id" />
+              <Route element={<AdminPanel />} path="/adminPanel" />
+              <Route element={<UpdateInfo />} path="/updateInfo" />
+
+
             </Route>
             <Route element={<LoginPage />} path="/login" />
             <Route element={<RegistrationPage />} path="/register" />
