@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Entity
@@ -15,6 +16,7 @@ import lombok.*;
 @Builder
 public class JobApplication extends BaseEntity{
 
+    private String url;
     private String resumeLink;
     private JobApplicationStatus status;
     @ManyToOne

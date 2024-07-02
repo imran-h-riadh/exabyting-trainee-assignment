@@ -11,11 +11,14 @@ public class ModelMapping {
 
     public static User userDtoToUser(UserDto userDto){
         User user = new User();
+        user.setId(userDto.getId());
         user.setName(userDto.getName());
         user.setEmail(userDto.getEmail());
         user.setRoles(userDto.getRoles());
         user.setPassword(userDto.getPassword());
-        user.setProfile(profileDtoToProfile(userDto.getProfile()));
+        if(userDto.getProfile() != null) {
+            user.setProfile(profileDtoToProfile(userDto.getProfile()));
+        }
         return user;
 
     }
@@ -37,7 +40,9 @@ public class ModelMapping {
         userDto.setEmail(user.getEmail());
         userDto.setRoles(user.getRoles());
         userDto.setPassword(user.getPassword());
-        userDto.setProfile(profileToProfileDto(user.getProfile()));
+        if(user.getProfile() != null){
+            userDto.setProfile(profileToProfileDto(user.getProfile()));
+        }
         return userDto;
     }
 

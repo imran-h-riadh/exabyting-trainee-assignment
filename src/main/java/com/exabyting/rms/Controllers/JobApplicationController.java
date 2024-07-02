@@ -2,8 +2,11 @@ package com.exabyting.rms.Controllers;
 
 import com.exabyting.rms.DTOs.JobApplicationDto;
 import com.exabyting.rms.Entities.Helper.JobApplicationStatus;
+import com.exabyting.rms.Exception.ApiException;
+import com.exabyting.rms.Exception.CustomException;
 import com.exabyting.rms.Exception.ResourceNotFound;
 import com.exabyting.rms.Services.ApplicationServices;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +23,7 @@ public class JobApplicationController {
 
     @PreAuthorize("hasAuthority('APPLICANT')")
     @PostMapping("/")
-    public ResponseEntity<?> create(@RequestBody JobApplicationDto jobApplicationDto) throws ResourceNotFound {
+    public ResponseEntity<?> create(@RequestBody @Valid JobApplicationDto jobApplicationDto) throws ResourceNotFound, CustomException {
 
         return new ResponseEntity<>(applicationServices.create(jobApplicationDto), HttpStatus.CREATED);
     }

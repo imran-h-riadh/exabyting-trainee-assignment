@@ -43,11 +43,24 @@ public class UserServiceImpl implements UserServices {
     }
 
     @Override
+    public UserDto update(UserDto userDto) {
+
+            User user = ModelMapping.userDtoToUser(userDto);
+            User save = userRepository.save(user);
+
+            ModelMapping.userToUserDto(save);
+            return ModelMapping.userToUserDto(save);
+
+    }
+
+
+    @Override
     public PageableResponse<UserDto> alluser(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
 
         Sort sort = sortDir.equalsIgnoreCase("asc")? Sort.by(sortBy).ascending():Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(pageNumber,pageSize,sort);
         Page<User> all = userRepository.findAll(pageable);
+        System.out.println(all);
         List<UserDto> collect = all.stream().map(ModelMapping::userToUserDto).toList();
         return new PageableResponse<>(collect,pageNumber,pageSize,all.getTotalElements());
     }

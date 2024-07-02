@@ -86,5 +86,19 @@ public class UserController {
     }
 
 
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<?>update(@PathVariable Integer userId,@RequestBody UserDto userDto){
+        try {
+            UserDto userDto1 = userServices.byId(userId);
+            userDto1.setName(userDto.getName());
+            userDto1.setProfile(userDto.getProfile());
+            UserDto update = userServices.update(userDto1);
+            return new ResponseEntity<>(update,HttpStatus.OK);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }
                          

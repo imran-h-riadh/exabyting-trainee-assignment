@@ -6,6 +6,8 @@ import com.exabyting.rms.Entities.Helper.JobApplicationStatus;
 import com.exabyting.rms.Entities.JobApplication;
 import com.exabyting.rms.Entities.JobOpening;
 import com.exabyting.rms.Entities.User;
+import com.exabyting.rms.Exception.ApiException;
+import com.exabyting.rms.Exception.CustomException;
 import com.exabyting.rms.Exception.ResourceNotFound;
 import com.exabyting.rms.Repositories.JobApplicationRepository;
 import com.exabyting.rms.Repositories.JobOpeningRepository;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,7 +36,7 @@ public class JobApplicationServiceImpl implements ApplicationServices {
     @Autowired
     private UserRepository userRepository;
     @Override
-    public JobApplicationDto create(JobApplicationDto jobApplicationDto) throws ResourceNotFound {
+    public JobApplicationDto create(JobApplicationDto jobApplicationDto) throws ResourceNotFound, CustomException {
 
 
         User user = userRepository.findById(jobApplicationDto.getUserId()).orElseThrow(
@@ -43,6 +46,10 @@ public class JobApplicationServiceImpl implements ApplicationServices {
         JobOpening jobOpening = jobOpeningRepository.findById(jobApplicationDto.getJobOpeningId()).orElseThrow(
                 ()->new ResourceNotFound("Job not found")
         );
+
+        List<JobApplication> applications = applicationRepository.findByUserIdAndJobOpeningId(jobApplicationDto.getUserId(),jobApplicationDto.getJobOpeningId());
+        if(!applications.isEmpty()) throw new CustomException("cant apply more than one time", HttpStatus.BAD_REQUEST);
+
 
         JobApplication application = JobApplication.builder()
                 .resumeLink(jobApplicationDto.getResumeLink())

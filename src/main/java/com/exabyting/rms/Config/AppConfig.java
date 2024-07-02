@@ -1,10 +1,13 @@
 package com.exabyting.rms.Config;
 
 
+import com.exabyting.rms.Services.Implementation.OAuth2ServiceImplementation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -26,6 +29,9 @@ import java.util.List;
 @EnableMethodSecurity(prePostEnabled = true)
 public class AppConfig {
 
+    @Autowired
+    private OAuth2ServiceImplementation oAuth2ServiceImplementation;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -39,6 +45,14 @@ public class AppConfig {
                                 .permitAll())
 
                 .addFilterBefore(new JwtTokenValidator(), UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth2Login ->
+                        oauth2Login
+                                .loginPage("/oauth2/authorization/github")
+                                .defaultSuccessUrl("/api/v1/home", true)
+                                .failureUrl("/login?error=true")
+                                .userInfoEndpoint(userInfo->
+                                        userInfo.userService(oAuth2ServiceImplementation))
+                )
                 .cors((cor)->cor.configurationSource(
                         new CorsConfigurationSource() {
                             @Override

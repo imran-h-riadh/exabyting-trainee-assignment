@@ -21,6 +21,8 @@ public class Profile extends BaseEntity{
     private String lastName;
     private String contactNumber;
     private Address address;
+    @Column(name = "profile_image_url")
+    private String profileImgUrl;
 
     @OneToOne(mappedBy = "profile")
     @Cascade(CascadeType.ALL)
