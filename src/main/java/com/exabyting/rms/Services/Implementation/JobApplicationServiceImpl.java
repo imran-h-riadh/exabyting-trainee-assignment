@@ -53,6 +53,7 @@ public class JobApplicationServiceImpl implements ApplicationServices {
 
         JobApplication application = JobApplication.builder()
                 .resumeLink(jobApplicationDto.getResumeLink())
+                .socialUrl(jobApplicationDto.getSocialUrl())
                 .jobOpening(jobOpening)
                 .user(user)
                 .status(JobApplicationStatus.PENDING)
@@ -62,6 +63,7 @@ public class JobApplicationServiceImpl implements ApplicationServices {
 
         return JobApplicationDto.builder()
                 .id(save.getId())
+                .socialUrl(save.getSocialUrl())
                 .jobOpeningId(jobApplicationDto.getJobOpeningId())
                 .userId(jobApplicationDto.getUserId())
                 .resumeLink(save.getResumeLink())

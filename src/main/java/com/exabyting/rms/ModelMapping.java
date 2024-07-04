@@ -28,6 +28,7 @@ public class ModelMapping {
         profile.setAddress(profileDto.getAddress());
         profile.setFirstName(profileDto.getFirstName());
         profile.setLastName(profileDto.getLastName());
+        profile.setProfileImgUrl(profileDto.getProfileImgUrl());
         profile.setContactNumber(profileDto.getContactNumber());
 
         return profile;
@@ -52,6 +53,7 @@ public class ModelMapping {
         profileDto.setFirstName(profile.getFirstName());
         profileDto.setLastName(profile.getLastName());
         profileDto.setContactNumber(profile.getContactNumber());
+        profileDto.setProfileImgUrl(profile.getProfileImgUrl());
         profileDto.setAddress(profile.getAddress());
         return profileDto;
     }

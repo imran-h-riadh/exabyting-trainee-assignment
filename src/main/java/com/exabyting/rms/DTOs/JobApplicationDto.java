@@ -12,9 +12,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class JobApplicationDto {
+
     private Integer id;
-    @Pattern(regexp = "^(http|https|ftp)://([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6})(:[0-9]{1,5})?(/[a-zA-Z0-9_.-]*)?$",
-            message = "Invalid URL")
+//    @Pattern(regexp = "^(http|https|ftp)://([a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6})(:[0-9]{1,5})?(/[a-zA-Z0-9_.-]*)?$",
+//            message = "Invalid URL")
+    private String socialUrl;
     private String resumeLink;
     private JobApplicationStatus status;
     private Integer jobOpeningId;

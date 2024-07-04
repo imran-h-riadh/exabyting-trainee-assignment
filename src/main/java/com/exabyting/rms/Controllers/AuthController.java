@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -55,6 +56,14 @@ public class AuthController {
         return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
 
     }
+
+    @GetMapping("/github")
+    public ResponseEntity<?>OAuth2(OAuth2UserRequest oAuth2UserRequest){
+
+        return new ResponseEntity<>("hello",HttpStatus.OK);
+    }
+
+
 
 
     @PostMapping("/login")

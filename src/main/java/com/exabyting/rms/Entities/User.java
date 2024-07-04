@@ -20,10 +20,9 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private String name;
 
-    @Column(unique = true,nullable = false)
     private String email;
 
-    @Column
+    @Column(nullable = true)
     private String password;
 
     @ElementCollection(targetClass = Role.class)

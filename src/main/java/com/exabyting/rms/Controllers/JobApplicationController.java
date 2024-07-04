@@ -29,7 +29,7 @@ public class JobApplicationController {
     }
 
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'HR')")
     @GetMapping("jobs/{jobId}")
     public ResponseEntity<?> byJobOpening(
             @PathVariable Integer jobId,

@@ -1,7 +1,4 @@
 package com.exabyting.rms.Config;
-
-
-import com.exabyting.rms.Services.Implementation.OAuth2ServiceImplementation;
 import jakarta.servlet.http.HttpServletRequest;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +9,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -29,8 +28,6 @@ import java.util.List;
 @EnableMethodSecurity(prePostEnabled = true)
 public class AppConfig {
 
-    @Autowired
-    private OAuth2ServiceImplementation oAuth2ServiceImplementation;
 
 
     @Bean
@@ -39,20 +36,12 @@ public class AppConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(s->s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authreq->
-                        authreq.requestMatchers("/api/v1/auth/login").permitAll()
+                        authreq.requestMatchers("/api/v1/auth/**").permitAll()
                                 .requestMatchers("api/v1/users/signup").permitAll()
                                 .anyRequest()
-                                .permitAll())
+                                .authenticated())
 
                 .addFilterBefore(new JwtTokenValidator(), UsernamePasswordAuthenticationFilter.class)
-                .oauth2Login(oauth2Login ->
-                        oauth2Login
-                                .loginPage("/oauth2/authorization/github")
-                                .defaultSuccessUrl("/api/v1/home", true)
-                                .failureUrl("/login?error=true")
-                                .userInfoEndpoint(userInfo->
-                                        userInfo.userService(oAuth2ServiceImplementation))
-                )
                 .cors((cor)->cor.configurationSource(
                         new CorsConfigurationSource() {
                             @Override
@@ -72,7 +61,6 @@ public class AppConfig {
                 ))
         ;
 
-
         return http.build();
 
     }
@@ -89,6 +77,11 @@ public class AppConfig {
     @Bean
     public ModelMapper modelMapper(){
         return new ModelMapper();
+    }
+
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
     }
 
 

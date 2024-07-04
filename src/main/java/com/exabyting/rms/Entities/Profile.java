@@ -23,7 +23,6 @@ public class Profile extends BaseEntity{
     private Address address;
     @Column(name = "profile_image_url")
     private String profileImgUrl;
-
     @OneToOne(mappedBy = "profile")
     @Cascade(CascadeType.ALL)
     private User user;

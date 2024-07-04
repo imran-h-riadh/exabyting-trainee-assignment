@@ -16,7 +16,7 @@ import lombok.*;
 @Builder
 public class JobApplication extends BaseEntity{
 
-    private String url;
+    private String socialUrl;
     private String resumeLink;
     private JobApplicationStatus status;
     @ManyToOne
