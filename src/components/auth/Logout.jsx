@@ -7,6 +7,7 @@ const Logout = () => {
   const {setAuth} = useAuth();
   const handleLogout = () => {
     setAuth({});
+    localStorage.removeItem('user')
     navigate("/login");
   }
 

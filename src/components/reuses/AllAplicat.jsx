@@ -1,33 +1,42 @@
 /* eslint-disable no-empty */
-import  { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import HttpReg from "../../httpReq/HttpReg";
+import { LoadingContext } from "../../context";
+import Error from "../common/Error";
 
 export default function AllAplicat() {
+  const navigate = useNavigate();
   const { get, put } = HttpReg();
   const { id } = useParams();
   const [allApplicant, setAllApplicant] = useState([]);
-  const [statusInfo, setStatusInfo] = useState({ status: "PENDING" });
-
-  const handleChange = async (e) => {
-    setStatusInfo({ ...statusInfo, status: e.target.value });
+  const [statusInfo, setStatusInfo] = useState({});
+  const { isLoading } = useContext(LoadingContext);
+  const handleChange = (e, applicantId) => {
+    setStatusInfo((prev) => ({
+      ...prev,
+      [applicantId]: e.target.value,
+    }));
   };
+
   async function handleSubmit(applicant) {
     const submitData = {
       id: applicant.id,
       resumeLink: applicant.resumeLink,
-      status: statusInfo.status,
+      status: statusInfo[applicant.id],
       jobOpeningId: applicant.jobOpeningId,
       userId: applicant.userId,
     };
 
     const response = await put(
-      `/applications/${submitData.id}/updateStatus/${statusInfo.status}`,
+      `/applications/${submitData.id}/updateStatus/${submitData.status}`,
       submitData
     );
     if (response.status === 200) {
+      fetchData();
     }
   }
+
   const fetchData = async () => {
     const response = await get(`/applications/jobs/${id}`);
     if (response.status === 200) {
@@ -38,18 +47,31 @@ export default function AllAplicat() {
   useEffect(() => {
     fetchData();
   }, []);
+
   if (!allApplicant || allApplicant.length === 0) {
     return (
       <div className="flex items-center justify-center h-screen ">
+        <button
+          className="mb-10 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+          onClick={() => navigate(-1)}
+        >
+          Go back
+        </button>
         <p className="text-6xl font-bold text-red-500">
           There is no applicant for this role
         </p>
       </div>
     );
   }
-
+  if (isLoading) return <Error />;
   return (
     <div className="bg-gray-900 text-white p-4">
+      <button
+        className="mb-10 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+        onClick={() => navigate(-1)}
+      >
+        Go back
+      </button>
       {allApplicant.map((applicant, index) => (
         <div
           key={applicant.id}
@@ -71,8 +93,8 @@ export default function AllAplicat() {
             <div>
               <h1 className="text-lg font-semibold mb-2">Applicant Status</h1>
               <select
-                value={applicant.status}
-                onChange={handleChange}
+                value={statusInfo[applicant.id] || applicant.status}
+                onChange={(e) => handleChange(e, applicant.id)}
                 className="bg-gray-700 text-white border border-gray-600 rounded p-2"
               >
                 <option value="PENDING">PENDING</option>

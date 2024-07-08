@@ -1,7 +1,6 @@
 import Field from "../components/common/Field";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 
 import axios from "axios";
 
@@ -18,6 +17,9 @@ const RegistrationPage = () => {
     formData = {
       ...formData,
       roles: ["APPLICANT"],
+      // roles: ["ADMIN"],
+      // roles: ["HR"],
+
       profile: {
         firstName: null,
         lastName: null,
@@ -29,7 +31,7 @@ const RegistrationPage = () => {
         },
       },
     };
-    
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_SERVER_BASE_URL}/users/signup`,
@@ -37,7 +39,6 @@ const RegistrationPage = () => {
       );
 
       if (response.status === 201) {
-        
         navigate("/login");
       }
     } catch (error) {
@@ -50,7 +51,7 @@ const RegistrationPage = () => {
 
   return (
     <form
-      className="border-b border-customBorder pb-10 lg:pb-[60px] mx-96"
+      className="border-b border-customBorder pb-10 lg:pb-[60px] mx-96 mt-40"
       onSubmit={handleSubmit(submitForm)}
     >
       <Field label="name" error={errors.name}>
@@ -100,6 +101,14 @@ const RegistrationPage = () => {
           Registration
         </button>
       </Field>
+      <div className="flex justify-center items-center  ">
+        <Link
+          className="text-white transition-all hover:text-lwsGreen hover:underline mx-2"
+          to="/login"
+        >
+          Go to login page
+        </Link>
+      </div>
     </form>
   );
 };

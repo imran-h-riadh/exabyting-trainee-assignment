@@ -64,101 +64,109 @@ const CreateJobPost = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6  shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Create Job Post</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="jobTitle" className="block  mb-2">
-            Job Title
-          </label>
-          <input
-            type="text"
-            id="jobTitle"
-            name="jobTitle"
-            value={formData.jobTitle}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg text-black"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="jobDescription" className="block  mb-2">
-            Job Description
-          </label>
-          <textarea
-            id="jobDescription"
-            name="jobDescription"
-            value={formData.jobDescription}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg text-black"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="requirements" className="block  mb-2">
-            Requirements
-          </label>
-          <textarea
-            id="requirements"
-            name="requirements"
-            value={formData.requirements}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg text-black"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="noOfVacancy" className="block  mb-2">
-            Number of Vacancies
-          </label>
-          <input
-            type="number"
-            id="noOfVacancy"
-            name="noOfVacancy"
-            value={formData.noOfVacancy ?? 0}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg text-black"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="deadLine" className="block  mb-2">
-            Deadline
-          </label>
-          <input
-            type="datetime-local"
-            id="deadLine"
-            name="deadLine"
-            value={formData.deadLine}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg text-black"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="status" className="block  mb-2">
-            Status
-          </label>
-          <select
-            id="status"
-            name="status"
-            value={formData.status}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-lg text-black"
-            required
+    <>
+      <button
+        className="mb-10 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+        onClick={() => navigate(-1)}
+      >
+        Go back
+      </button>
+      <div className="max-w-lg mx-auto p-6  shadow-md rounded-lg">
+        <h2 className="text-2xl font-bold mb-4">Create Job Post</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="jobTitle" className="block  mb-2">
+              Job Title
+            </label>
+            <input
+              type="text"
+              id="jobTitle"
+              name="jobTitle"
+              value={formData.jobTitle}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg text-black"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="jobDescription" className="block  mb-2">
+              Job Description
+            </label>
+            <textarea
+              id="jobDescription"
+              name="jobDescription"
+              value={formData.jobDescription}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg text-black"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="requirements" className="block  mb-2">
+              Requirements
+            </label>
+            <textarea
+              id="requirements"
+              name="requirements"
+              value={formData.requirements}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg text-black"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="noOfVacancy" className="block  mb-2">
+              Number of Vacancies
+            </label>
+            <input
+              type="number"
+              id="noOfVacancy"
+              name="noOfVacancy"
+              value={formData.noOfVacancy ?? 0}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg text-black"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="deadLine" className="block  mb-2">
+              Deadline
+            </label>
+            <input
+              type="datetime-local"
+              id="deadLine"
+              name="deadLine"
+              value={formData.deadLine}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg text-black"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="status" className="block  mb-2">
+              Status
+            </label>
+            <select
+              id="status"
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-lg text-black"
+              required
+            >
+              <option value="OPEN">OPEN</option>
+              <option value="CLOSE">CLOSE</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
           >
-            <option value="OPEN">OPEN</option>
-            <option value="CLOSE">CLOSE</option>
-          </select>
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"
-        >
-          Create Job Post
-        </button>
-      </form>
-    </div>
+            Create Job Post
+          </button>
+        </form>
+      </div>
+    </>
   );
 };
 
