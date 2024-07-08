@@ -5,6 +5,7 @@ import HttpReg from "../httpReq/HttpReg";
 export default function AdminPanel() {
     const [allUserInfo, setAllUserInfo] = useState([]);
   const [userStatus, setUserStatus] = useState("ALL");
+  const [pageNumber, setPageNumber] = useState(0)
 
   const { get, remove } = HttpReg()
 
@@ -24,13 +25,17 @@ export default function AdminPanel() {
       useEffect(() => {
         fetchData();
       }, []);
+      useEffect(() => {
+        fetchData();
+      }, [pageNumber]);
       const fetchData = async () => {
-        const response = await get(`/users/`);
+        const response = await get(`/users/?pageNumber=${pageNumber}&&pageSize=3`);
     
         if (response.status === 200) {
           setAllUserInfo(response.data);
         }
       };
+      console.log(allUserInfo);
       async function handleUserdelete(id) {
         const response = await remove(
           `/users/${id}`
@@ -44,7 +49,7 @@ export default function AdminPanel() {
           
         }
       }
-    
+    console.log(pageNumber);
   return (
     <div className="max-w-4xl mx-auto p-6  shadow-md rounded-lg">
       <h2 className="text-2xl font-bold mb-4">Admin panel</h2>
@@ -79,7 +84,7 @@ export default function AdminPanel() {
             >
               <td className="py-3 px-6 text-left">
                 {" "}
-                <Link to={`/JobDetails/${userInfo.id}`}>
+                <Link to={`/me/${userInfo.id}`}>
                   {userInfo.name}
                 </Link>{" "}
               </td>
@@ -99,6 +104,26 @@ export default function AdminPanel() {
           ))}
         </tbody>
       </table>
+      <div className="flex justify-center items-center gap-3 mt-8 ">
+  {pageNumber !== 0 && (
+    <button 
+      onClick={() => setPageNumber(pageNumber => pageNumber - 1)}
+      className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+    >
+      Previous
+    </button>
+  )}
+  {pageNumber < Math.ceil(allUserInfo.totalElements / 3) - 1 && (
+    <button 
+      onClick={() => setPageNumber(pageNumber => pageNumber + 1)}
+      className="px-4 py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-75 transition duration-300"
+    >
+      Next
+    </button>
+  )}
+</div>
+
+
     </div>
   )
 }

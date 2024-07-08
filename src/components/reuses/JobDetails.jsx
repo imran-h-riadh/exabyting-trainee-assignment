@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import useAxios from '../../hooks/useAxios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../hooks/useAuth';
 import Modal from './Modal';
 import HttpReg from '../../httpReq/HttpReg';
 
@@ -15,7 +14,7 @@ export default function JobDetails() {
 
   const { api } = useAxios();
   const { id } = useParams();
-  const { auth } = useAuth();
+  const  auth  = JSON.parse(localStorage.getItem('user'))
 
   const [detailInfo, setDetailInfo] = useState({});
   const [showModal, setShowModal] = useState(false);
@@ -34,16 +33,19 @@ export default function JobDetails() {
   };
 
   function isAuth(role) {
-    return auth.userDto.roles.some((each) => each === role);
+    return auth?.userDto?.roles?.some((each) => each === role);
   }
-  async function handleSubmitApply(cvLink){
+  async function handleSubmitApply(cvLink,socialUrl){
+    
     const submitData = {
       resumeLink: cvLink,
       status: "PENDING",
       jobOpeningId: id,
-      "userId": auth.userDto.id
+      "userId": auth.userDto.id,
+      socialUrl:socialUrl,
 
   }
+  console.log(submitData);
   try {
     const response = await api.post(`${import.meta.env.VITE_SERVER_BASE_URL}/applications/`,submitData);
     if (response.status === 201) {

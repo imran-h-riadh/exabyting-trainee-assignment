@@ -2,10 +2,9 @@
 import { useEffect, useState } from "react";
 import HttpReg from "../../httpReq/HttpReg";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 
 export default function AllJobs() {
-  const { auth } = useAuth();
+  const auth  = JSON.parse(localStorage.getItem('user'))
   const { get, remove } = HttpReg();
 
   const [allJobInfo, setAllJobInfo] = useState([]);
@@ -22,7 +21,7 @@ export default function AllJobs() {
     }
   };
   function isAuth(role) {
-    return auth.userDto.roles.some((each) => each == role);
+    return auth?.userDto?.roles?.some((each) => each == role);
   }
   async function handleStatusChange(newStatus) {
     if (newStatus == "ALL") {
@@ -75,7 +74,7 @@ export default function AllJobs() {
           </tr>
         </thead>
         <tbody className="text-gray-600 text-sm font-light">
-          {allJobInfo.map((jobInfo) => (
+          {allJobInfo?.map((jobInfo) => (
             <tr
               key={jobInfo.id}
               className="border-b border-gray-200 hover:bg-gray-100"
