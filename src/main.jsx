@@ -4,13 +4,16 @@ import App from "./App.jsx";
 import "./index.css";
 import AuthProvider from "./providers/AuthProvider.jsx";
 import LoadingProvider from "./providers/ErrorProvider.jsx";
+import ErrorPageProvider from "./providers/ErrorPageProvider.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <AuthProvider>
-    <LoadingProvider>
-      <Router>
-        <App />
-      </Router>
-    </LoadingProvider>
+    <ErrorPageProvider>
+      <LoadingProvider>
+        <Router>
+          <App />
+        </Router>
+      </LoadingProvider>
+    </ErrorPageProvider>
   </AuthProvider>
 );

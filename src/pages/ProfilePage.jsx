@@ -1,10 +1,12 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import HttpReg from "../httpReq/HttpReg";
 import Error from "../components/common/Error";
 import { LoadingContext } from "../context";
 
 export default function ProfilePage() {
+  const navigate = useNavigate();
+
   const { get, post, put } = HttpReg();
   const { isLoading } = useContext(LoadingContext);
   const auth = JSON.parse(localStorage.getItem("user"));
@@ -125,136 +127,151 @@ export default function ProfilePage() {
   }, []);
   if (isLoading) return <Error />;
   return (
-    <div className="max-w-full mx-auto p-4">
-      <div className="flex flex-col items-center mb-6">
-        <div className="w-32 h-32 mb-4 relative">
-          <img
-            src={userData?.profile?.profileImgUrl || "default-profile.png"}
-            alt="profile pic"
-            className="w-full h-full rounded-full object-cover shadow-lg"
-          />
-        </div>
-        {itSelf && (
-          <>
-            <input
-              type="file"
-              onChange={handleChange}
-              className="w-full max-w-sm p-3 border border-gray-300 text-black rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <>
+      <button
+        className="mb-10 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+        onClick={() => navigate(-1)}
+      >
+        Go back
+      </button>
+
+      <div className="max-w-full mx-auto p-4">
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-32 h-32 mb-4 relative">
+            <img
+              src={userData?.profile?.profileImgUrl || "default-profile.png"}
+              alt="profile pic"
+              className="w-full h-full rounded-full object-cover shadow-lg"
             />
-            <button
-              onClick={handleSubmit}
-              className="w-full max-w-sm bg-blue-500 text-white p-3 rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+          </div>
+          {itSelf && (
+            <>
+              <input
+                type="file"
+                onChange={handleChange}
+                className="w-full max-w-sm p-3 border border-gray-300 text-black rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              {file && (
+                <button
+                  onClick={handleSubmit}
+                  className="w-full max-w-sm bg-blue-500 text-white p-3 rounded-lg shadow-md hover:bg-blue-600 transition duration-300"
+                >
+                  Upload Photo
+                </button>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="w-full bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden mb-6">
+          <div className="p-4">
+            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
+              User Information
+            </h2>
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300">
+                Name:
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {userData.name}
+              </p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300">
+                Email:
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {userData.email}
+              </p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300">
+                Roles:
+              </label>
+              <ul className="list-disc list-inside text-gray-900 dark:text-gray-100">
+                {userData?.roles?.map((role, index) => (
+                  <li key={index}>{role}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300">
+                Contact Number:
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {userData?.profile?.contactNumber}
+              </p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300">
+                Street:
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {userData?.profile?.address?.street}
+              </p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300">
+                City:
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {userData?.profile?.address?.city}
+              </p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 dark:text-gray-300">
+                Country:
+              </label>
+              <p className="text-gray-900 dark:text-gray-100">
+                {userData?.profile?.address?.country}
+              </p>
+            </div>
+          </div>
+          {itSelf && (
+            <Link
+              to={`/updateInfo?id=${auth?.userDto?.id}`}
+              className="block text-center text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-500 rounded-lg p-4 transition duration-300 shadow-lg w-3/6 mb-7 m-auto"
             >
-              Upload Photo
-            </button>
+              Update your Information
+            </Link>
+          )}
+        </div>
+
+        {isAuth("APPLICANT") && (
+          <>
+            <p className="text-gray-900 dark:text-gray-100 mt-6 text-xl font-semibold">
+              Applied Jobs
+            </p>
+            {appliedData?.map((singleApplied) => (
+              <div
+                key={singleApplied.id}
+                className="mb-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"
+              >
+                <p className="text-gray-900 dark:text-gray-100">
+                  <span className="font-bold">Job Name:</span>{" "}
+                  {jobDetails[singleApplied.jobOpeningId]?.jobTitle ||
+                    "Loading..."}
+                </p>
+                <div className="text-gray-900 dark:text-gray-100">
+                  <span className="font-bold">Resume Link:</span>{" "}
+                  <a
+                    href={singleApplied.resumeLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500"
+                  >
+                    {singleApplied.resumeLink}
+                  </a>
+                </div>
+                <p className="text-gray-900 dark:text-gray-100">
+                  <span className="font-bold">Status:</span>{" "}
+                  {singleApplied.status}
+                </p>
+              </div>
+            ))}
           </>
         )}
       </div>
-
-      <div className="w-full bg-white dark:bg-gray-800 shadow-md rounded-lg overflow-hidden mb-6">
-        <div className="p-4">
-          <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-gray-100">
-            User Information
-          </h2>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Name:
-            </label>
-            <p className="text-gray-900 dark:text-gray-100">{userData.name}</p>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Email:
-            </label>
-            <p className="text-gray-900 dark:text-gray-100">{userData.email}</p>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Roles:
-            </label>
-            <ul className="list-disc list-inside text-gray-900 dark:text-gray-100">
-              {userData?.roles?.map((role, index) => (
-                <li key={index}>{role}</li>
-              ))}
-            </ul>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Contact Number:
-            </label>
-            <p className="text-gray-900 dark:text-gray-100">
-              {userData?.profile?.contactNumber}
-            </p>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Street:
-            </label>
-            <p className="text-gray-900 dark:text-gray-100">
-              {userData?.profile?.address?.street}
-            </p>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">
-              City:
-            </label>
-            <p className="text-gray-900 dark:text-gray-100">
-              {userData?.profile?.address?.city}
-            </p>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 dark:text-gray-300">
-              Country:
-            </label>
-            <p className="text-gray-900 dark:text-gray-100">
-              {userData?.profile?.address?.country}
-            </p>
-          </div>
-        </div>
-        {itSelf && (
-          <Link
-            to={`/updateInfo?id=${auth?.userDto?.id}`}
-            className="block text-center text-blue-500 dark:text-blue-300 p-4"
-          >
-            Update your Information
-          </Link>
-        )}
-      </div>
-
-      {isAuth("APPLICANT") && (
-        <>
-          <p className="text-gray-900 dark:text-gray-100 mt-6 text-xl font-semibold">
-            Applied Jobs
-          </p>
-          {appliedData?.map((singleApplied) => (
-            <div
-              key={singleApplied.id}
-              className="mb-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md"
-            >
-              <p className="text-gray-900 dark:text-gray-100">
-                <span className="font-bold">Job Name:</span>{" "}
-                {jobDetails[singleApplied.jobOpeningId]?.jobTitle ||
-                  "Loading..."}
-              </p>
-              <div className="text-gray-900 dark:text-gray-100">
-                <span className="font-bold">Resume Link:</span>{" "}
-                <a
-                  href={singleApplied.resumeLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500"
-                >
-                  {singleApplied.resumeLink}
-                </a>
-              </div>
-              <p className="text-gray-900 dark:text-gray-100">
-                <span className="font-bold">Status:</span>{" "}
-                {singleApplied.status}
-              </p>
-            </div>
-          ))}
-        </>
-      )}
-    </div>
+    </>
   );
 }

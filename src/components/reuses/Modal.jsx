@@ -14,7 +14,7 @@ export default function Modal({ setShowModal, handleSubmitApply }) {
     setCvlink(value);
     if (validator.isURL(value)) {
       setErrorMessage(`${value} is a valid URL`);
-      setIsDisabled(false); // Enable button only if file is also selected
+      setIsDisabled(file === null); // Enable button only if file is also selected
     } else {
       setErrorMessage(`${value} is not a valid URL`);
       setIsDisabled(true);
@@ -30,11 +30,11 @@ export default function Modal({ setShowModal, handleSubmitApply }) {
       setIsDisabled(true);
     }
   };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const formData = new FormData();
     formData.append("cv", file);
-    // formData.append("cv", file.name);
 
     try {
       const response = await post(`/files/cv/upload/`, formData);
@@ -61,7 +61,11 @@ export default function Modal({ setShowModal, handleSubmitApply }) {
           onChange={(e) => validate(e.target.value)}
           className="w-full p-3 border text-black rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-        <p className={`${isDisabled ? "text-red-600" : "text-green-600"}`}>
+        <p
+          className={`${
+            validator.isURL(cvLink) ? "text-green-600" : "text-red-600"
+          }`}
+        >
           {errorMessage}
         </p>
         <input

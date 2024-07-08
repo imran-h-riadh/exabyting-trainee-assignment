@@ -1,16 +1,19 @@
 /* eslint-disable no-empty */
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import HttpReg from "../../httpReq/HttpReg";
+import { LoadingContext } from "../../context";
+import Error from "../common/Error";
 
 export default function AllAplicat() {
+  const navigate = useNavigate();
   const { get, put } = HttpReg();
   const { id } = useParams();
   const [allApplicant, setAllApplicant] = useState([]);
   const [statusInfo, setStatusInfo] = useState({});
-
+  const { isLoading } = useContext(LoadingContext);
   const handleChange = (e, applicantId) => {
-    setStatusInfo(prev => ({
+    setStatusInfo((prev) => ({
       ...prev,
       [applicantId]: e.target.value,
     }));
@@ -48,15 +51,27 @@ export default function AllAplicat() {
   if (!allApplicant || allApplicant.length === 0) {
     return (
       <div className="flex items-center justify-center h-screen ">
+        <button
+          className="mb-10 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+          onClick={() => navigate(-1)}
+        >
+          Go back
+        </button>
         <p className="text-6xl font-bold text-red-500">
           There is no applicant for this role
         </p>
       </div>
     );
   }
-
+  if (isLoading) return <Error />;
   return (
     <div className="bg-gray-900 text-white p-4">
+      <button
+        className="mb-10 px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 transition duration-300"
+        onClick={() => navigate(-1)}
+      >
+        Go back
+      </button>
       {allApplicant.map((applicant, index) => (
         <div
           key={applicant.id}
