@@ -1,14 +1,11 @@
-import { useAuth } from "../hooks/useAuth";
 import AllJobs from "../components/reuses/allJobs";
-
-
 import { Link } from "react-router-dom";
 
 const HomePage = () => {
-  const { auth } = useAuth();
+  const auth  =JSON.parse(localStorage.getItem('user'))
 
   function isAuth(role) {
-    return auth.userDto.roles.some((each) => each == role);
+    return auth?.userDto?.roles?.some((each) => each == role);
   }
 
   return (
